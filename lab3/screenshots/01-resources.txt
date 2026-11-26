@@ -1,0 +1,25 @@
+$ kubectl get nodes
+NAME        STATUS   ROLES                  AGE   VERSION
+lab3-node   Ready    control-plane,master   11m   v1.31.5+k3s1
+
+$ kubectl -n lab3 get deployments,pods,services,configmaps,secrets
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/nextcloud   1/1     1            1           8m32s
+deployment.apps/postgres    1/1     1            1           10m
+
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/nextcloud-799dc555-vnx9c    1/1     Running   0          8m32s
+pod/postgres-7bfb68b8c4-kdswx   1/1     Running   0          10m
+
+NAME                       TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+service/nextcloud          NodePort    10.43.159.232   <none>        80:30445/TCP   8m32s
+service/postgres-service   ClusterIP   10.43.21.107    <none>        5432/TCP       10m
+
+NAME                            DATA   AGE
+configmap/kube-root-ca.crt      1      10m
+configmap/nextcloud-configmap   5      8m32s
+configmap/postgres-configmap    1      10m
+
+NAME                      TYPE     DATA   AGE
+secret/nextcloud-secret   Opaque   1      8m32s
+secret/postgres-secret    Opaque   2      10m

@@ -1,0 +1,36 @@
+ДО МАСШТАБИРОВАНИЯ
+
+$ kubectl -n lab3 get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+nextcloud-799dc555-vnx9c    1/1     Running   0          8m34s
+postgres-7bfb68b8c4-kdswx   1/1     Running   0          10m
+
+$ kubectl -n lab3 exec deployment/postgres -- psql -U nextcloud -d nextcloud -c 'SELECT count(*) AS public_tables FROM pg_tables WHERE schemaname = '"'"'public'"'"';'
+ public_tables 
+---------------
+           122
+(1 row)
+
+
+Выполнено: scale PostgreSQL в 0, ожидание удаления Pod, scale обратно в 1.
+
+ПОСЛЕ МАСШТАБИРОВАНИЯ
+
+$ kubectl -n lab3 exec deployment/postgres -- psql -U nextcloud -d nextcloud -c 'SELECT count(*) AS public_tables FROM pg_tables WHERE schemaname = $$public$$;'
+ public_tables 
+---------------
+             0
+(1 row)
+
+
+$ kubectl -n lab3 get pods
+NAME                        READY   STATUS    RESTARTS   AGE
+nextcloud-799dc555-vnx9c    0/1     Running   0          18m
+postgres-7bfb68b8c4-6dxw6   1/1     Running   0          2m13s
+
+$ kubectl -n lab3 get deployment postgres
+NAME       READY   UP-TO-DATE   AVAILABLE   AGE
+postgres   1/1     1            1           20m
+
+Прямой HTTP GET /index.php/login через новый port-forward к Deployment: HTTP 500.
+Nextcloud остался в том же Pod, перезапусков контейнера: 0.

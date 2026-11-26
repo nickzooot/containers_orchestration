@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nextcloud-configmap
+  namespace: lab3
+  labels:
+    app: nextcloud
+data:
+  NEXTCLOUD_UPDATE: "1"
+  # Сохранена из задания; официальный образ Nextcloud её не использует.
+  ALLOW_EMPTY_PASSWORD: "no"
+  POSTGRES_HOST: "postgres-service"
+  NEXTCLOUD_TRUSTED_DOMAINS: "localhost 127.0.0.1"
+  NEXTCLOUD_ADMIN_USER: "lab3admin"

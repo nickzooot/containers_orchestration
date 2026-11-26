@@ -1,0 +1,75 @@
+$ kubectl -n lab3 describe pod -l app=nextcloud
+Name:             nextcloud-799dc555-vnx9c
+Namespace:        lab3
+Priority:         0
+Service Account:  default
+Node:             lab3-node/10.0.2.15
+Start Time:       Thu, 26 Nov 2026 19:29:04 +0100
+Labels:           app=nextcloud
+                  pod-template-hash=799dc555
+Annotations:      <none>
+Status:           Running
+IP:               10.42.0.5
+IPs:
+  IP:           10.42.0.5
+Controlled By:  ReplicaSet/nextcloud-799dc555
+Containers:
+  nextcloud:
+    Container ID:   containerd://258032cf73553355d123f7d285b9c1a851a661a4981d29da912f94dec5a866a5
+    Image:          nextcloud:32-apache
+    Image ID:       docker.io/library/nextcloud@sha256:7032779c2121b26919ad36dc7bcb68b94ef37c451bfede06926e8b03b5caa1fc
+    Port:           80/TCP
+    Host Port:      0/TCP
+    State:          Running
+      Started:      Thu, 26 Nov 2026 19:34:32 +0100
+    Ready:          True
+    Restart Count:  0
+    Limits:
+      cpu:     1
+      memory:  1Gi
+    Requests:
+      cpu:      250m
+      memory:   256Mi
+    Liveness:   tcp-socket :http delay=0s timeout=3s period=10s #success=1 #failure=3
+    Readiness:  http-get http://:http/index.php/login delay=0s timeout=5s period=10s #success=1 #failure=3
+    Startup:    tcp-socket :http delay=0s timeout=3s period=10s #success=1 #failure=60
+    Environment Variables from:
+      nextcloud-configmap  ConfigMap  Optional: false
+      postgres-configmap   ConfigMap  Optional: false
+      postgres-secret      Secret     Optional: false
+      nextcloud-secret     Secret     Optional: false
+    Environment:           <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-n57xd (ro)
+      /var/www/html from nextcloud-data (rw)
+Conditions:
+  Type                        Status
+  PodReadyToStartContainers   True 
+  Initialized                 True 
+  Ready                       True 
+  ContainersReady             True 
+  PodScheduled                True 
+Volumes:
+  nextcloud-data:
+    Type:       EmptyDir (a temporary directory that shares a pod's lifetime)
+    Medium:     
+    SizeLimit:  <unset>
+  kube-api-access-n57xd:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Burstable
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason     Age                  From               Message
+  ----     ------     ----                 ----               -------
+  Normal   Scheduled  8m33s                default-scheduler  Successfully assigned lab3/nextcloud-799dc555-vnx9c to lab3-node
+  Normal   Pulling    8m32s                kubelet            Pulling image "nextcloud:32-apache"
+  Normal   Pulled     3m6s                 kubelet            Successfully pulled image "nextcloud:32-apache" in 5m25.795s (5m25.795s including waiting). Image size: 504704241 bytes.
+  Normal   Created    3m6s                 kubelet            Created container nextcloud
+  Normal   Started    3m5s                 kubelet            Started container nextcloud
+  Warning  Unhealthy  73s (x12 over 3m3s)  kubelet            Startup probe failed: dial tcp 10.42.0.5:80: connect: connection refused
